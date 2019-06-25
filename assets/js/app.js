@@ -22,6 +22,7 @@ let frequency = 0
 
 //click event
 $('#submit-btn').on("click", function(event){
+  event.preventDefault()
   let trainName = $('#name-input').val().trim()
   let destination = $('#destination-input').val().trim()
   let firstTrainTime = $('#time-input').val().trim()
@@ -30,7 +31,27 @@ $('#submit-btn').on("click", function(event){
   database.ref().push({
     train: trainName,
     destination: destination,
-    firstTime: firstTrainTime,
     frequency: frequency,
+  })
+
+  // let currentTime = dateFns.format(new Date (), 'HH:mm')
+  // let nextArrival = dateFns.addMinutes(firstTrainTime, frequency)
+  // // let minutesAway = 
+
+  // console.log(firstTrainTime)
+  // console.log(frequency)
+  // console.log(nextArrival)
+
+
+  //retreive from firebase
+  database.ref().on("child_added", function(snapshot){
+    let row = '<tr>'+
+                '<td>'+snapshot.val().train+'<td>'+
+                '<td>'+snapshot.val().destination+'<td>'+
+                '<td>'+snapshot.val().frequency+'<td>'+
+                '<td>'+"placeholder"+'<td>'+
+                '<td>'+"placeholder"+'<td>'+
+              '</tr>'
+    $('tbody').append(row)    
   })
 })
