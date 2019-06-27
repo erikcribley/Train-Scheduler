@@ -17,7 +17,7 @@ const database = firebase.database()
 //initial values
 let trainName = ""
 let destination = ""
-let timeInput = ""
+// let timeInput = ""
 let frequency = 0
 let currentTime = new Date ()
 
@@ -47,6 +47,7 @@ $('#submit-btn').on("click", function(event){
   let trainName = $('#name-input').val().trim()
   let destination = $('#destination-input').val().trim()
   let frequency = $('#frequency-input').val().trim()
+  
   //push to firebase
   database.ref().push({
     train: trainName,
@@ -54,26 +55,22 @@ $('#submit-btn').on("click", function(event){
     frequency: frequency,
   })
 
+  //variables 
   let timeInput = $('#time-input').val().trim()
   let hoursMins = timeInput.split(':')
   let firstTrain = setTime(hoursMins[0], hoursMins[1])
-  let nextTrain = (findNext(firstTrain, frequency))
+  let nextTrain = findNext(firstTrain, frequency)
   let nextArrival = dateFns.format(nextTrain, 'HH:mm')
-
-  console.log(currentTime)
-  console.log(firstTrain)
-  console.log(nextTrain)
-  console.log(nextArrival) 
-  // // let minutesAway = 
+  let minutesAway = dateFns.differenceInMinutes(nextTrain, currentTime)
  
-  //retreive from firebase
+  //retrieve from firebase
   database.ref().on("child_added", function(snapshot){
     let row = '<tr>'+
                 '<td>'+snapshot.val().train+'<td>'+
                 '<td>'+snapshot.val().destination+'<td>'+
                 '<td>'+snapshot.val().frequency+'<td>'+
                 '<td>'+nextArrival+'<td>'+
-                '<td>'+""+'<td>'+
+                '<td>'+minutesAway+'<td>'+
               '</tr>'
     $('tbody').append(row)    
   })
