@@ -17,7 +17,6 @@ const database = firebase.database()
 //initial values
 let trainName = ""
 let destination = ""
-// let timeInput = ""
 let frequency = 0
 let currentTime = new Date ()
 
@@ -55,7 +54,7 @@ $('#submit-btn').on("click", function(event){
     frequency: frequency,
   })
 
-  //variables 
+  //variables outside of database
   let timeInput = $('#time-input').val().trim()
   let hoursMins = timeInput.split(':')
   let firstTrain = setTime(hoursMins[0], hoursMins[1])
@@ -74,4 +73,10 @@ $('#submit-btn').on("click", function(event){
               '</tr>'
     $('tbody').append(row)    
   })
+
+  //clear values of form
+  $('#name-input').val("")
+  $('#destination-input').val("")
+  $('#time-input').val("")
+  $('#frequency-input').val("")
 })
