@@ -17,15 +17,37 @@ const database = firebase.database()
 //initial values
 let trainName = ""
 let destination = ""
-let firstTrainTime = ""
+let timeInput = ""
 let frequency = 0
+let currentTime = new Date ()
+
+//function to set first train time
+function setTime (h, m) {
+  return dateFns.setHours(dateFns.setMinutes(new Date(), m), h)
+}
+
+//function to find next arrival
+function findNext (t, f) {
+  if (dateFns.isAfter(t, currentTime) === true) {
+    return t
+  } else if (dateFns.isAfter(dateFns.addMinutes(t, f), currentTime) === true) {
+    return dateFns.addMinutes(t, f) 
+  } else {
+    while (dateFns.isAfter(dateFns.addMinutes(t, f), currentTime) === false) {
+      t = dateFns.addMinutes(t, f)
+      dateFns.addMinutes(t, f)
+    }
+    t = dateFns.addMinutes(t, f)
+    dateFns.addMinutes(t, f)
+    return t
+  }
+}
 
 //click event
 $('#submit-btn').on("click", function(event){
   event.preventDefault()
   let trainName = $('#name-input').val().trim()
   let destination = $('#destination-input').val().trim()
-  let firstTrainTime = $('#time-input').val().trim()
   let frequency = $('#frequency-input').val().trim()
   //push to firebase
   database.ref().push({
@@ -34,23 +56,25 @@ $('#submit-btn').on("click", function(event){
     frequency: frequency,
   })
 
-  // let currentTime = dateFns.format(new Date (), 'HH:mm')
-  // let nextArrival = dateFns.addMinutes(firstTrainTime, frequency)
+  let timeInput = $('#time-input').val().trim()
+  let hoursMins = timeInput.split(':')
+  let firstTrain = setTime(hoursMins[0], hoursMins[1])
+  console.log(currentTime)
+  console.log(findNext(firstTrain, frequency))
+  
+
+
+  // let nextArrival = 
   // // let minutesAway = 
-
-  // console.log(firstTrainTime)
-  // console.log(frequency)
-  // console.log(nextArrival)
-
-
+ 
   //retreive from firebase
   database.ref().on("child_added", function(snapshot){
     let row = '<tr>'+
                 '<td>'+snapshot.val().train+'<td>'+
                 '<td>'+snapshot.val().destination+'<td>'+
                 '<td>'+snapshot.val().frequency+'<td>'+
-                '<td>'+"placeholder"+'<td>'+
-                '<td>'+"placeholder"+'<td>'+
+                '<td>'+""+'<td>'+
+                '<td>'+""+'<td>'+
               '</tr>'
     $('tbody').append(row)    
   })
