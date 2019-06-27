@@ -30,8 +30,6 @@ function setTime (h, m) {
 function findNext (t, f) {
   if (dateFns.isAfter(t, currentTime) === true) {
     return t
-  } else if (dateFns.isAfter(dateFns.addMinutes(t, f), currentTime) === true) {
-    return dateFns.addMinutes(t, f) 
   } else {
     while (dateFns.isAfter(dateFns.addMinutes(t, f), currentTime) === false) {
       t = dateFns.addMinutes(t, f)
@@ -59,12 +57,13 @@ $('#submit-btn').on("click", function(event){
   let timeInput = $('#time-input').val().trim()
   let hoursMins = timeInput.split(':')
   let firstTrain = setTime(hoursMins[0], hoursMins[1])
+  let nextTrain = (findNext(firstTrain, frequency))
+  let nextArrival = dateFns.format(nextTrain, 'HH:mm')
+
   console.log(currentTime)
-  console.log(findNext(firstTrain, frequency))
-  
-
-
-  // let nextArrival = 
+  console.log(firstTrain)
+  console.log(nextTrain)
+  console.log(nextArrival) 
   // // let minutesAway = 
  
   //retreive from firebase
@@ -73,7 +72,7 @@ $('#submit-btn').on("click", function(event){
                 '<td>'+snapshot.val().train+'<td>'+
                 '<td>'+snapshot.val().destination+'<td>'+
                 '<td>'+snapshot.val().frequency+'<td>'+
-                '<td>'+""+'<td>'+
+                '<td>'+nextArrival+'<td>'+
                 '<td>'+""+'<td>'+
               '</tr>'
     $('tbody').append(row)    
