@@ -8,6 +8,7 @@ var firebaseConfig = {
     messagingSenderId: "293681796902",
     appId: "1:293681796902:web:7a4e16fc6f3af451"
   };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 
@@ -18,6 +19,7 @@ const database = firebase.database()
 let trainName = ""
 let destination = ""
 let frequency = 0
+let timeInput = ""
 let currentTime = new Date ()
 
 //function to set first train time
@@ -45,34 +47,17 @@ $('#submit-btn').on("click", function(event){
   event.preventDefault()
   let trainName = $('#name-input').val().trim()
   let destination = $('#destination-input').val().trim()
-  let frequency = $('#frequency-input').val().trim()
-  
+  let frequency = $('#frequency-input').val().trim() 
+  let timeInput = $('#time-input').val().trim()
+
   //push to firebase
   database.ref().push({
     train: trainName,
     destination: destination,
+    time: timeInput,
     frequency: frequency,
-  })
-
-  //variables outside of database
-  let timeInput = $('#time-input').val().trim()
-  let hoursMins = timeInput.split(':')
-  let firstTrain = setTime(hoursMins[0], hoursMins[1])
-  let nextTrain = findNext(firstTrain, frequency)
-  let nextArrival = dateFns.format(nextTrain, 'HH:mm')
-  let minutesAway = dateFns.differenceInMinutes(nextTrain, currentTime)
- 
-  //retrieve from firebase
-  database.ref().on("child_added", function(snapshot){
-    let row = '<tr>'+
-                '<td>'+snapshot.val().train+'<td>'+
-                '<td>'+snapshot.val().destination+'<td>'+
-                '<td>'+snapshot.val().frequency+'<td>'+
-                '<td>'+nextArrival+'<td>'+
-                '<td>'+minutesAway+'<td>'+
-              '</tr>'
-    $('tbody').append(row)    
-  })
+    dateAdded: firebase.database.ServerValue.TIMESTAMP,
+  })  
 
   //clear values of form
   $('#name-input').val("")
@@ -80,3 +65,22 @@ $('#submit-btn').on("click", function(event){
   $('#time-input').val("")
   $('#frequency-input').val("")
 })
+
+//retrieve info from firebase
+  database.ref().on("child_added", function(childSnapshot){
+    let hoursMins = childSnapshot.val().time.split(':')
+    let firstTrain = setTime(hoursMins[0], hoursMins[1])
+    let nextTrain = findNext(firstTrain, childSnapshot.val().frequency)
+    let nextArrival = dateFns.format(nextTrain, 'HH:mm')
+    let minutesAway = dateFns.differenceInMinutes(nextTrain, currentTime)
+    let row = '<tr>'+
+                '<td>'+childSnapshot.val().train+'<td>'+
+                '<td>'+childSnapshot.val().destination+'<td>'+
+                '<td>'+childSnapshot.val().frequency+'<td>'+
+                '<td>'+nextArrival+'<td>'+
+                '<td>'+minutesAway+'<td>'+
+              '</tr>'
+    $('tbody').append(row)  
+  }, function (errorObject) {
+    console.log("Errors:" + errorObject.code)
+  })
