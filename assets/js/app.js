@@ -67,20 +67,20 @@ $('#submit-btn').on("click", function(event){
 })
 
 //retrieve info from firebase
-  database.ref().on("child_added", function(childSnapshot){
-    let hoursMins = childSnapshot.val().time.split(':')
-    let firstTrain = setTime(hoursMins[0], hoursMins[1])
-    let nextTrain = findNext(firstTrain, childSnapshot.val().frequency)
-    let nextArrival = dateFns.format(nextTrain, 'HH:mm')
-    let minutesAway = dateFns.differenceInMinutes(nextTrain, currentTime)
-    let row = '<tr>'+
-                '<td>'+childSnapshot.val().train+'<td>'+
-                '<td>'+childSnapshot.val().destination+'<td>'+
-                '<td>'+childSnapshot.val().frequency+'<td>'+
-                '<td>'+nextArrival+'<td>'+
-                '<td>'+minutesAway+'<td>'+
-              '</tr>'
-    $('tbody').append(row)  
-  }, function (errorObject) {
-    console.log("Errors:" + errorObject.code)
-  })
+database.ref().on("child_added", function(childSnapshot){
+  let hoursMins = childSnapshot.val().time.split(':')
+  let firstTrain = setTime(hoursMins[0], hoursMins[1])
+  let nextTrain = findNext(firstTrain, childSnapshot.val().frequency)
+  let nextArrival = dateFns.format(nextTrain, 'HH:mm')
+  let minutesAway = dateFns.differenceInMinutes(nextTrain, currentTime)
+  let row = '<tr>'+
+              '<td>'+childSnapshot.val().train+'</td>'+
+              '<td>'+childSnapshot.val().destination+'</td>'+
+              '<td>'+childSnapshot.val().frequency+'</td>'+
+              '<td>'+nextArrival+'</td>'+
+              '<td>'+minutesAway+'</td>'+
+            '</tr>'
+  $('tbody').append(row)  
+}, function (errorObject) {
+  console.log("Errors:" + errorObject.code)
+})

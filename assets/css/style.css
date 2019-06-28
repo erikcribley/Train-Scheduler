@@ -1,0 +1,102 @@
+body {
+    background: #ececec;
+    color: black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+}
+
+header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+#table-div {
+    width: 70%;
+    float: left;
+    margin-bottom: 50px;
+}
+
+table,
+td,
+th,
+tr {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+table {
+    margin-left: 50px;
+    border-collapse: collapse;
+    background: white;
+    width: 800px;
+}
+
+#caption,
+caption {
+    background: blue;
+    color: white;
+    font-style: bold;
+    text-align: center;
+    padding: 5px;
+}
+
+thead {
+    font-style: bold;
+    text-align: left;
+}
+
+#form-div {
+    float: right;
+    width: 30%;
+    font-size: 15px;
+    margin-bottom: 50px;
+}
+
+form {
+    background: white;
+    width: 300px;
+    padding-bottom: 5px;
+    border: 1px solid black;
+}
+
+label {
+    padding: 5px;
+    display: block;
+}
+
+input {
+    display: block;
+    padding: 5px;
+    text-align: left;
+    margin: 0 5px;
+}
+
+input [type=text],
+input [type=number] {
+    width: 250px;
+}
+
+#submit-btn {
+    margin-top: 5px;
+}
+
+@media screen and (max-width:1232px) {
+    #table-div {
+        width: 100%;
+        float: none;
+        margin: auto;
+        margin-bottom: 50px;
+    }
+    
+    #form-div {
+        width: 100%;
+        float: none;
+        margin: auto;
+        margin-bottom: 50px;
+    }
+
+    table,
+    form {
+        margin: auto;
+    }
+}
