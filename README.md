@@ -11,4 +11,7 @@ parameters are passed to a setTime function. An additional function findNext, us
 determine when the next train will arrive in relation to the current time.
 
 A click event takes the values from the form and logs them to firebase. The on_child_added function reacts when new data is 
-logged to firebase and appends it to the table. Data already stored in firebase is displayed on the table at pageload.    
+logged to firebase and appends it to the table. Data already stored in firebase is displayed on the table at pageload. 
+
+I styled the page with my own CSS rather than make the form and table through Bootstrap to get experience working with 
+tables and forms. In the future I'll likely use Bootstrap for this purpose for both ease and aesthetic reasons.   
